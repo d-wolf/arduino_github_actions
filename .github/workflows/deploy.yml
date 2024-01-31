@@ -1,0 +1,46 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+
+env:
+  # the flutter application root
+  WORKING_DIRECTORY: "Blink"
+  # where the build number starts at
+  BUILD_OFFSET: "100"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - uses: gittools/actions/gitversion/setup@v0.9.7
+        with:
+          versionSpec: "5.x"
+
+      - id: gitversion
+        uses: gittools/actions/gitversion/execute@v0.9.7
+        with:
+          useConfigFile: true
+          configFilePath: GitVersion.yml
+
+      - name: write BUILD env
+        run: echo -n echo "BUILD=$((${{ github.run_number }}+${{ env.BUILD_OFFSET }}))" >> $GITHUB_ENV
+
+      - name: prepare arduino cli
+        run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+
+      - name: compile
+        run: ./bin/arduino-cli compile ${{ env.WORKING_DIRECTORY }}/${{ env.WORKING_DIRECTORY }}.ino --fqbn arduino:mbed_nano:nano33ble --output-dir out
+
+      - uses: ncipollo/release-action@v1
+        with:
+          name: "${{ env.GITVERSION_SEMVER }}+${{ env.BUILD }}"
+          tag: "${{ env.GITVERSION_SEMVER }}"
+          artifacts: "out"
+          bodyFile: "CHANGELOG.md"
+          token: ${{ secrets.GITHUB_TOKEN }}
+          artifactErrorsFailBuild: true
