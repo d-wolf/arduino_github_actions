@@ -39,6 +39,10 @@ jobs:
       - name: compile
         run: ./bin/arduino-cli compile ${{ env.WORKING_DIRECTORY }}/${{ env.WORKING_DIRECTORY }}.ino --fqbn arduino:mbed_nano:nano33ble --output-dir out
 
+      - name: generate CHANGELOG.md
+        run: |
+          git log -1 --pretty=format:"%b" > CHANGELOG.md
+
       - uses: ncipollo/release-action@v1
         with:
           name: "${{ env.GITVERSION_SEMVER }}+${{ env.BUILD }}"
