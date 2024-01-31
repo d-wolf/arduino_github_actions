@@ -33,6 +33,9 @@ jobs:
       - name: prepare arduino cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 
+      - name: install mbed nano
+        run: ./bin/arduino-cli core install arduino:mbed_nano
+
       - name: compile
         run: ./bin/arduino-cli compile ${{ env.WORKING_DIRECTORY }}/${{ env.WORKING_DIRECTORY }}.ino --fqbn arduino:mbed_nano:nano33ble --output-dir out
 
