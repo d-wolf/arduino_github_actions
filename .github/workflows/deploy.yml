@@ -30,6 +30,10 @@ jobs:
       - name: write BUILD_WITH_OFFSET env
         run: echo -n "BUILD_WITH_OFFSET=$((${{ github.run_number }}+${{ env.BUILD_OFFSET }}))" >> $GITHUB_ENV
 
+      - name: Update version in .yaml
+        run: sed -i 's/0.0.0+0/${{ env.GITVERSION_SEMVER }}+${{ env.BUILD_WITH_OFFSET }}/g' ${{env.WORKING_DIRECTORY}}.ino
+        working-directory: ${{env.WORKING_DIRECTORY}}
+
       - name: prepare the arduino-cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 
