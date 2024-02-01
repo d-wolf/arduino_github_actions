@@ -5,7 +5,7 @@ on:
 
 env:
   # the flutter application root
-  WORKING_DIRECTORY: "Blink"
+  PROJ_NAME: "Blink"
   # where the build number starts at
   BUILD_OFFSET: "100"
 
@@ -37,7 +37,10 @@ jobs:
         run: ./bin/arduino-cli core install arduino:mbed_nano
 
       - name: compile
-        run: ./bin/arduino-cli compile ${{ env.WORKING_DIRECTORY }}/${{ env.WORKING_DIRECTORY }}.ino --fqbn arduino:mbed_nano:nano33ble --output-dir out
+        run: ./bin/arduino-cli compile ${{ env.PROJ_NAME }}/${{ env.PROJ_NAME }}.ino --fqbn arduino:mbed_nano:nano33ble --output-dir out
+
+      - name: zip
+        run: zip -r out.zip out
 
       - name: generate CHANGELOG.md
         run: |
@@ -47,7 +50,7 @@ jobs:
         with:
           name: "${{ env.GITVERSION_SEMVER }}+${{ env.BUILD }}"
           tag: "${{ env.GITVERSION_SEMVER }}"
-          artifacts: "out"
+          artifacts: "out.zip"
           bodyFile: "CHANGELOG.md"
           token: ${{ secrets.GITHUB_TOKEN }}
           artifactErrorsFailBuild: true
