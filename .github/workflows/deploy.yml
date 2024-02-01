@@ -27,8 +27,8 @@ jobs:
           useConfigFile: true
           configFilePath: GitVersion.yml
 
-      - name: write BUILD env
-        run: echo -n echo "BUILD=$((${{ github.run_number }}+${{ env.BUILD_OFFSET }}))" >> $GITHUB_ENV
+      - name: write BUILD_WITH_OFFSET env
+        run: echo -n "BUILD_WITH_OFFSET=$((${{ github.run_number }}+${{ env.BUILD_OFFSET }}))" >> $GITHUB_ENV
 
       - name: prepare arduino cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
@@ -48,7 +48,7 @@ jobs:
 
       - uses: ncipollo/release-action@v1
         with:
-          name: "${{ env.GITVERSION_SEMVER }}+${{ env.BUILD }}"
+          name: "${{ env.GITVERSION_SEMVER }}+${{ env.BUILD_WITH_OFFSET }}"
           tag: "${{ env.GITVERSION_SEMVER }}"
           artifacts: "out.zip"
           bodyFile: "CHANGELOG.md"
