@@ -30,11 +30,13 @@ jobs:
       - name: write BUILD_WITH_OFFSET env
         run: echo -n "BUILD_WITH_OFFSET=$((${{ github.run_number }}+${{ env.BUILD_OFFSET }}))" >> $GITHUB_ENV
 
-      - name: prepare the arduino cli
+      - name: prepare the arduino-cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 
-      - name: install mbed nano
-        run: ./bin/arduino-cli core install arduino:mbed_nano
+      - name: install arduino-cli resources
+        run: |
+          ./bin/arduino-cli core install arduino:mbed_nano
+          ./bin/arduino-cli lib install ArduinoBLE@1.3.6
 
       - name: compile
         run: ./bin/arduino-cli compile ${{ env.PROJ_NAME }}/${{ env.PROJ_NAME }}.ino --fqbn arduino:mbed_nano:nano33ble --output-dir out
