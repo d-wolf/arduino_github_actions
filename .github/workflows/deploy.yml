@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
 
 env:
-  # the flutter application root
-  PROJ_NAME: "Blink"
+  # the arduino project root/name
+  PROJ_NAME: "LED"
   # where the build number starts at
   BUILD_OFFSET: "100"
 
@@ -30,7 +30,7 @@ jobs:
       - name: write BUILD_WITH_OFFSET env
         run: echo -n "BUILD_WITH_OFFSET=$((${{ github.run_number }}+${{ env.BUILD_OFFSET }}))" >> $GITHUB_ENV
 
-      - name: prepare arduino cli
+      - name: prepare the arduino cli
         run: curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
 
       - name: install mbed nano
