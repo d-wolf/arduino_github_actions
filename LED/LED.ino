@@ -17,6 +17,7 @@
 
 #include <ArduinoBLE.h>
 
+#define SN "<<<<SERIALNUMBERX>>>>"
 #define FIRMWARE_VERSION "0.0.0+0"
 
 BLEService ledService("19B10000-E8F2-537E-4F6C-D104768A1214");  // Bluetooth® Low Energy LED Service
@@ -38,7 +39,7 @@ void setup() {
 
   // set LED pin to output mode
   pinMode(ledPin, OUTPUT);
-
+  Serial.println(SN);
   // begin initialization
   if (!BLE.begin()) {
     Serial.println("starting Bluetooth® Low Energy module failed!");
